@@ -19,10 +19,10 @@
       <a href="mailto:keita4ds@gmail.com">
         <img class="hover-image third-image" src="gmail_Icon.png" alt="Third Image">
       </a>
-     <a href="https://www.instagram.com/type1mob">
-      <img class="hover-image forth-image" src="InstagramIcon.jpeg" alt="forth Image">
-     </a>
-      
+      <a href="https://www.instagram.com/type1mob">
+        <img class="hover-image forth-image" src="InstagramIcon.jpeg" alt="forth Image">
+      </a>
+
     </div>
     </p>
     <p class="overlay__title">Name:<span class="text-gradient">植松蛍太</span></p>
@@ -44,11 +44,13 @@
   <div class="overlay__inner">
     <h2 class="overlay__title"><span class="text-gradient">Skill</span></h2>
     <!-- 説明 -->
+
     <ul class="overlay__description">
-      <li><strong>C</strong>、 <strong>C++</strong>、 <strong>C#</strong></li>
-      <li><strong>HTML</strong>、 <strong>JavaScript</strong>、 <strong>CSS</strong></li>
-      <li><strong>DirectX11</strong>、 <strong>DXライブラリ</strong></li>
-      <li><strong>Unity</strong>、 <strong>UnrealEngine</strong></li>
+      <li class="fadeIn"><strong>C</strong>、 <strong>C++</strong>、 <strong>C#</strong>、 <strong>Maya</strong></li>
+      <li class="fadeIn"><strong>HTML</strong>、 <strong>JavaScript</strong>、 <strong>PHP</strong>、 <strong>CSS</strong>
+      </li>
+      <li class="fadeIn"><strong>DirectX11</strong>、 <strong>DXライブラリ</strong></li>
+      <li class="fadeIn"><strong>Unity</strong>、 <strong>UnrealEngine5</strong></li>
     </ul>
   </div>
 </div>
@@ -59,14 +61,15 @@
     <h3 class="overlay__title"><span class="text-gradient">Works</span></h3>
     <!-- 説明 -->
     <ul class="overlay__description">
-      <li><strong>ころころダンジョン</strong></li>
-      <li><strong>りんご拾い</strong></li>
-      <li><strong>エクスプランド</strong></li>
-      <li><strong>TURNMARIONETTE</strong></li>
+      <li class="fadeIn"><strong>ころころダンジョン</strong></li>
+      <li class="fadeIn"><strong>りんご拾い</strong></li>
+      <li class="fadeIn"><strong>エクスプランド</strong></li>
+      <li class="fadeIn"><strong>TURNMARIONETTE</strong></li>
     </ul>
   </div>
   <p id="youtubelink"><a href="https://www.youtube.com/channel/UCVHz6m_PpPPy_8m0eRCsMxA">youtube</a></p>
-  <p id="googlelink"><a href="https://drive.google.com/drive/u/0/folders/16bYCpJqM9Wb_9rvZrQS3DuXXRoUiMW6u">DownLoad Link...</a></p>
+  <p id="googlelink"><a href="https://drive.google.com/drive/u/0/folders/16bYCpJqM9Wb_9rvZrQS3DuXXRoUiMW6u">DownLoad
+      Link...</a></p>
 </div>
 
 
@@ -74,12 +77,12 @@
 <!-- 賞歴一覧 -->
 <div class="overlay_Awords" id="achievementsSection">
   <div class="overlay__inner">
-    <h3 class="overlay__title"><span class="text-gradient">Awords</span></h3>
+    <h3 class="overlay__title"><span class="text-gradient">Awards</span></h3>
     <!-- 説明 -->
     <ul class="overlay__description">
-      <li><strong>ころころダンジョン　HAL Event Week　努力賞</strong></li>
-      <li><strong>エクスプランド　HAL Event Week　技術力賞</strong></li>
-      <li><strong>TURNMARIONETTE　日本ゲーム大賞　最終審査進出</strong></li>
+      <li class="fadeIn"><strong>ころころダンジョン　HAL Event Week　努力賞</strong></li>
+      <li class="fadeIn"><strong>エクスプランド　HAL Event Week　技術力賞</strong></li>
+      <li class="fadeIn"><strong>TURNMARIONETTE　日本ゲーム大賞　最終審査進出</strong></li>
     </ul>
   </div>
 </div>
@@ -378,4 +381,33 @@
     const element = document.getElementById(id);
     element.scrollIntoView({ behavior: 'smooth' });
   }
+
+</script>
+
+<script>
+  // script.js
+
+  // 対象となる全ての要素を取得
+  const fadeInElements = document.querySelectorAll('.fadeIn');
+
+  // Intersection Observerを作成
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // 要素が画面に表示されたら、fadeInクラスを追加してフェードインアニメーションを開始
+        entry.target.classList.add('fadeInAnimation');
+        // アニメーションが一度だけ実行されるようにObserverを無効にする
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+
+  });
+
+  // 全ての対象要素をObserverに登録
+  fadeInElements.forEach(element => {
+    observer.observe(element);
+  });
+
+
 </script>
