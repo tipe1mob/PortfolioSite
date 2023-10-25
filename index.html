@@ -1,51 +1,65 @@
 <!--===============CSS参照=============================-->
+<!-- CSSファイルを読み込む -->
 <link rel="stylesheet" href="portfolio.css">
+
 <!--背景クラス宣言-->
+<!-- 背景エフェクトのためのCanvas要素 -->
 <canvas class="backEfect"></canvas>
 
 <!-- テキスト表示領域 -->
 <!-- 自己紹介 -->
+<!-- 自己紹介のセクション -->
 <div class="overlay_profile" id="nameSection">
+  <!-- オーバーレイの内部コンテンツ -->
   <div class="overlay__inner">
+    <!-- オーバーレイのタイトル -->
     <h1 class="overlay__title">
       <span class="text-gradient">Profile</span>
     </h1>
+    <!-- プロフィールの画像とSNSリンク -->
     <p style="text-align:center">
-    <div class="c-bnr texturefade">
-      <img class="normal-image" src="sample_00.jpg" alt="Original Image">
-      <a href="https://www.youtube.com/channel/UCVHz6m_PpPPy_8m0eRCsMxA">
-        <img class="hover-image second-image" src="YouTube-Icon.jpg" alt="Second Image">
-      </a>
-      <a href="mailto:keita4ds@gmail.com">
-        <img class="hover-image third-image" src="gmail_Icon.png" alt="Third Image">
-      </a>
-      <a href="https://www.instagram.com/type1mob">
-        <img class="hover-image forth-image" src="InstagramIcon.jpeg" alt="forth Image">
-      </a>
-
-    </div>
+      <!-- 画像バナー -->
+      <div class="c-bnr texturefade">
+        <!-- プロフィール画像 -->
+        <img class="normal-image" src="profile.jpg" alt="オリジナル画像">
+        <!-- YouTubeへのリンク -->
+        <a href="https://www.youtube.com/channel/UCVHz6m_PpPPy_8m0eRCsMxA">
+          <img class="hover-image second-image" src="YouTube-Icon.jpg" alt="セカンド画像">
+        </a>
+        <!-- メールへのリンク -->
+        <a href="mailto:keita4ds@gmail.com">
+          <img class="hover-image third-image" src="gmail_Icon.png" alt="サード画像">
+        </a>
+        <!-- Instagramへのリンク -->
+        <a href="https://www.instagram.com/type1mob">
+          <img class="hover-image forth-image" src="InstagramIcon.jpeg" alt="フォース画像">
+        </a>
+      </div>
     </p>
+    <!-- 名前の表示 -->
     <p class="overlay__title">Name:<span class="text-gradient">植松蛍太</span></p>
-    <!-- 説明 -->
+    <!-- 自己紹介文 -->
     <ul class="overlay__description">
-      <li>高校生からプログラムを始め、<strong>HAL大阪に入学後に本格的にプログラムを触るようになりました。</strong></li>
-      <li><strong>誰が見ても分かりやすい読みやすいコードを意識</strong>して制作に取り組んでいます。</li>
-      <li><strong>チーム制作ではリードプログラマを担当した経験</strong>があり、日本ゲーム大賞では受賞までは届きませんでしたが最終審査を通過することができました。</li>
-      <li>リーダーや担当箇所に関わる人などと細かくコミュニケーションを取りながら作業を進め、解釈のズレや進捗の共有をして、<strong>無駄な制作時間を発生させないように注意して制作に取り組むことができます。</strong>
+      <!-- ポイントを強調した説明文 -->
+      <li>高校生の頃からプログラムを学び、<strong>HAL大阪に入学後本格的にプログラムに取り組んでいます。</strong></li>
+      <li><strong>誰にでもわかりやすく、読みやすいコードを心がけて制作に取り組んでいます。</strong></li>
+      <li><strong>チームでの制作経験が豊富で、日本ゲーム大賞では最終審査まで進出できました。</strong></li>
+      <li>リーダーやチームメンバーとの密なコミュニケーションを通じて、<strong>無駄な時間を減らし、効率的に制作に取り組むことができます。</strong>
       </li>
     </ul>
-
   </div>
-</div>
 </div>
 
 <!-- できること -->
+<!-- スキルのセクション -->
 <div class="overlay_Skill" id="skillsSection">
+  <!-- オーバーレイの内部コンテンツ -->
   <div class="overlay__inner">
+    <!-- オーバーレイのタイトル -->
     <h2 class="overlay__title"><span class="text-gradient">Skill</span></h2>
-    <!-- 説明 -->
-
+    <!-- スキルの説明文 -->
     <ul class="overlay__description">
+      <!-- スキルの言語やツールをリストで表示 -->
       <li class="fadeIn"><strong>C</strong>、 <strong>C++</strong>、 <strong>C#</strong>、 <strong>Maya</strong></li>
       <li class="fadeIn"><strong>HTML</strong>、 <strong>JavaScript</strong>、 <strong>PHP</strong>、 <strong>CSS</strong>
       </li>
@@ -56,30 +70,38 @@
 </div>
 
 <!-- 制作ゲーム一覧 -->
+<!-- ゲーム作品のセクション -->
 <div class="overlay_Works" id="gamesSection">
+  <!-- オーバーレイの内部コンテンツ -->
   <div class="overlay__inner">
+    <!-- オーバーレイのタイトル -->
     <h3 class="overlay__title"><span class="text-gradient">Works</span></h3>
-    <!-- 説明 -->
+    <!-- ゲーム作品の説明文 -->
     <ul class="overlay__description">
+      <!-- 制作したゲームのリスト -->
       <li class="fadeIn"><strong>ころころダンジョン</strong></li>
       <li class="fadeIn"><strong>りんご拾い</strong></li>
       <li class="fadeIn"><strong>エクスプランド</strong></li>
       <li class="fadeIn"><strong>TURNMARIONETTE</strong></li>
     </ul>
   </div>
-  <p id="youtubelink"><a href="https://www.youtube.com/channel/UCVHz6m_PpPPy_8m0eRCsMxA">youtube</a></p>
-  <p id="googlelink"><a href="https://drive.google.com/drive/u/0/folders/16bYCpJqM9Wb_9rvZrQS3DuXXRoUiMW6u">DownLoad
-      Link...</a></p>
+  <!-- YouTubeへのリンク -->
+  <p id="youtubelink"><a href="https://www.youtube.com/channel/UCVHz6m_PpPPy_8m0eRCsMxA">YouTube</a></p>
+  <!-- ダウンロードリンク -->
+  <p id="googlelink"><a href="https://drive.google.com/drive/u/0/folders/16bYCpJqM9Wb_9rvZrQS3DuXXRoUiMW6u">ダウンロード
+      リンク...</a></p>
 </div>
 
-
-
 <!-- 賞歴一覧 -->
+<!-- 受賞歴のセクション -->
 <div class="overlay_Awords" id="achievementsSection">
+  <!-- オーバーレイの内部コンテンツ -->
   <div class="overlay__inner">
+    <!-- オーバーレイのタイトル -->
     <h3 class="overlay__title"><span class="text-gradient">Awards</span></h3>
-    <!-- 説明 -->
+    <!-- 受賞歴の説明文 -->
     <ul class="overlay__description">
+      <!-- 受賞した賞やイベントのリスト -->
       <li class="fadeIn"><strong>ころころダンジョン　HAL Event Week　努力賞</strong></li>
       <li class="fadeIn"><strong>エクスプランド　HAL Event Week　技術力賞</strong></li>
       <li class="fadeIn"><strong>TURNMARIONETTE　日本ゲーム大賞　最終審査進出</strong></li>
@@ -87,9 +109,10 @@
   </div>
 </div>
 
+<!-- ナビゲーションボタン -->
 <table>
   <tr>
-    <!-- ナビゲーションボタン -->
+    <!-- 各セクションへのリンクを提供するボタン -->
     <td>
       <button class="overlay__btn overlay__btn--name">
         <a href="#nameSection">Profile</a>
@@ -107,11 +130,12 @@
     </td>
     <td>
       <button class="overlay__btn overlay__btn--achievements">
-        <a href="#achievementsSection">Awords</a>
+        <a href="#achievementsSection">Awards</a>
       </button>
     </td>
   </tr>
 </table>
+
 
 <!--==================================JavaScript====================================-->
 <script id="rendered-js" type="module">
@@ -120,9 +144,6 @@
   import SimplexNoise from "https://cdn.skypack.dev/simplex-noise@3.0.0";
   import hsl from "https://cdn.skypack.dev/hsl-to-hex";
   import debounce from "https://cdn.skypack.dev/debounce";
-
-
-
 
   // 指定された範囲内のランダムな数値を返す関数
   function random(min, max) {
@@ -133,7 +154,6 @@
   function map(n, start1, end1, start2, end2) {
     return (n - start1) / (end1 - start1) * (end2 - start2) + start2;
   }
-
 
   //====================================色設定=========================================
   // Simplexノイズの新しいインスタンスを作成する
@@ -205,7 +225,6 @@
     }
   }
 
-
   //====================================背景処理=========================================
   // backOrbクラス
   class backOrb {
@@ -242,7 +261,6 @@
         debounce(() => {
           this.bounds = this.setBounds();
         }, 250));
-
     }
 
     // orbが移動できる範囲（bounds）を設定するメソッド
@@ -346,18 +364,6 @@
       orb.render();
     });
   }
-  // 「色をランダムに変更」ボタンがクリックされたときの処理
-  // document.querySelector(".overlay__btn--colors").addEventListener("click", () => {
-  //   colorPalette.setColors();
-  //   colorPalette.setCustomProperties();
-  //   orbs.forEach(orb => {
-  //     orb.fill = colorPalette.randomColor();
-  //   });
-  // });
-
-
-
-
 
   // ボタンを押した際のスクロール処理
   document.querySelector('.overlay__btn--name').addEventListener('click', function () {
@@ -381,12 +387,9 @@
     const element = document.getElementById(id);
     element.scrollIntoView({ behavior: 'smooth' });
   }
-
 </script>
 
 <script>
-  // script.js
-
   // 対象となる全ての要素を取得
   const fadeInElements = document.querySelectorAll('.fadeIn');
 
@@ -403,11 +406,8 @@
   }, {
 
   });
-
   // 全ての対象要素をObserverに登録
   fadeInElements.forEach(element => {
     observer.observe(element);
   });
-
-
 </script>
