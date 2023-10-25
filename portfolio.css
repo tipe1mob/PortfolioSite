@@ -1,3 +1,6 @@
+
+
+
 /*背景色と同じテキスト*/
 :root {
     --dark-color: hsl(var(--hue), 100%, 9%);
@@ -388,10 +391,19 @@ table {
 }
 
 
-/* ul{
-    padding-left:0;
-  }
+.fadeInAnimation {
+    opacity: 0;
+    animation: fadeIn 3.0s ease forwards;
+}
 
-  li{
-    list-style:none;
-  } */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+
