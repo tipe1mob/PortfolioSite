@@ -394,3 +394,38 @@ table {
         opacity: 1;
     }
 }
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    background-color: #44444434;
+    border: 6px solid #ffffff;
+}
+
+/* CSS */
+.arrow {
+    /* 通常のスタイル */
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 44px;
+    cursor: pointer;
+
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+
+    /* 特定のプロパティに対するトランジションを設定 */
+    transition-property: transform;
+    /* トランジションの時間とタイミング関数を設定 */
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+}
+
+.arrow:hover {
+    transform: translateY(-3.7px);
+    /* Y軸方向に-10pxだけ浮き上がるアニメーション */
+}
