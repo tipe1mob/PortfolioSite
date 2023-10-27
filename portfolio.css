@@ -426,3 +426,7 @@ canvas {
 .arrow:hover {
     transform: translateY(-3.7px);
 }
+
+body {
+    touch-action: manipulation;
+}
