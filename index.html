@@ -27,7 +27,7 @@
     <p class="overlay__title">Name:<span class="text-gradient">植松蛍太</span></p>
     <!-- 説明 -->
     <ul class="overlay__description">
-      <li>高校生からプログラムを始め、<strong>HAL大阪入学後に本格的にプログラムを触るようになりました。</strong></li>
+      <li>高校生からプログラムを始め、<strong>HAL大阪に入学後に本格的にプログラムを触るようになりました。</strong></li>
       <li><strong>誰が見ても分かりやすい読みやすいコードを意識</strong>して制作に取り組んでいます。</li>
       <li><strong>チーム制作ではリードプログラマを担当した経験</strong>があり、日本ゲーム大賞では受賞までは届きませんでしたが最終審査を通過することができました。</li>
       <li>リーダーや担当箇所に関わる人などと細かくコミュニケーションを取りながら作業を進め、解釈のズレや進捗の共有をして、<strong>無駄な制作時間を発生させないように注意して制作に取り組むことができます。</strong>
@@ -109,6 +109,12 @@
     </td>
   </tr>
 </table>
+
+<canvas id="game" width="480" height="320"></canvas>
+
+<div class="arrow left-arrow">&#9665;</div>
+<div class="arrow right-arrow">&#9655;</div>
+
 
 <!--==================================JavaScript====================================-->
 <script id="rendered-js" type="module">
@@ -342,15 +348,12 @@
   document.querySelector('.overlay__btn--name').addEventListener('click', function () {
     scrollToElement('nameSection');
   });
-
   document.querySelector('.overlay__btn--skills').addEventListener('click', function () {
     scrollToElement('skillsSection');
   });
-
   document.querySelector('.overlay__btn--games').addEventListener('click', function () {
     scrollToElement('gamesSection');
   });
-
   document.querySelector('.overlay__btn--achievements').addEventListener('click', function () {
     scrollToElement('achievementsSection');
   });
@@ -384,4 +387,422 @@
   fadeInElements.forEach(element => {
     observer.observe(element);
   });
+</script>
+
+
+<script>
+  // キャンバスとコンテキストの取得
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+
+  // ブロック、パドル、ボールの各種サイズとパディング、オフセット
+  const BRICK_WIDTH = 85;
+  const BRICK_HEIGHT = 20;
+  const BRICK_PADDING = 10;
+  const BRICK_OFFSET_TOP = 30;
+  const BRICK_OFFSET_LEFT = 8;
+  const PADDLE_WIDTH = 75;
+  const PADDLE_HEIGHT = 5;
+  const BALL_RADIUS = 10;
+
+  // ブロックの行数と列数、パドルの移動速度
+  const brickRowCount = 4;
+  const brickColumnCount = 5;
+  const KIYPADDLE_SPEED = 7.0;
+  const CLICKPADDLE_SPEED = 40.0;
+
+  // ゲームの状態を表す変数と、パドルの移動方向を示すフラグ
+  let gameover = false;
+  let rightPressed = false;
+  let leftPressed = false;
+
+  // ブロックの情報を保持する配列
+  let bricks = [];
+
+  // 勝利アニメーションの実行フラグ
+  // 勝利アニメーションの実行フラグと時間
+  let isWinAnimationRunning = false;
+  const winAnimationDuration = 4000; // 勝利アニメーションの時間（ミリ秒）
+
+  /// キャンバスの位置を取得
+  const canvasRect = canvas.getBoundingClientRect();
+
+  // ボールの初期設定
+  const ball = {
+    x: canvas.width / 5,
+    y: canvas.height - 20,
+    dx: 2.3,
+    dy: -2.3,
+    radius: BALL_RADIUS,
+    color: getRandomColor()
+  };
+
+  // パドルの初期設定
+  const paddle = {
+    width: PADDLE_WIDTH,
+    height: PADDLE_HEIGHT,
+    x: (canvas.width - PADDLE_WIDTH) / 2
+  };
+
+  // 左右矢印の要素を取得
+  const leftArrow = document.querySelector('.left-arrow');
+  const rightArrow = document.querySelector('.right-arrow');
+  // クラス名を追加
+  leftArrow.classList.add('arrow');
+  rightArrow.classList.add('arrow');
+
+  // 矢印間のスペースを設定
+  const arrowSpacing = 10; // 矢印間の間隔（ピクセル）
+
+  // 左矢印要素の位置を設定（キャンバスの下部に配置）
+  leftArrow.style.margin = '0 ' + arrowSpacing + 'px 0 0';
+  // 右矢印要素の位置を設定（キャンバスの下部に配置）
+  rightArrow.style.margin = '0 0 0 ' + arrowSpacing + 'px';
+
+  // キャンバスの下部に矢印を配置する要素の位置を設定
+  const arrowsContainer = document.createElement('div');
+  arrowsContainer.style.display = 'flex';
+  arrowsContainer.style.justifyContent = 'center'; // 水平方向の中央揃え
+  arrowsContainer.style.position = 'relative';
+  arrowsContainer.appendChild(leftArrow);
+  arrowsContainer.appendChild(rightArrow);
+  document.body.appendChild(arrowsContainer); // ドキュメントボディに追加
+
+  // ランダムな色を生成する関数
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  // ブロックの初期化関数
+  function initializeBricks() {
+    bricks = [];
+    for (let c = 0; c < brickColumnCount; c++) {
+      bricks[c] = [];
+      for (let r = 0; r < brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 1 };
+      }
+    }
+  }
+
+  // ブロックを描画する関数
+  function drawBricks() {
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        const brick = bricks[c][r];
+        if (brick.status === 1) {
+          const brickX = c * (BRICK_WIDTH + BRICK_PADDING) + BRICK_OFFSET_LEFT;
+          const brickY = r * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_OFFSET_TOP;
+          brick.x = brickX;
+          brick.y = brickY;
+          ctx.beginPath();
+          ctx.rect(brickX, brickY, BRICK_WIDTH, BRICK_HEIGHT);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+    }
+  }
+
+  // ブロックが全て消されたかを判定する関数
+  function checkWin() {
+    let count = 0;
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          count++;
+        }
+      }
+    }
+    // ブロックが全て消された場合、背景色をレインボーカラーに変更
+    if (count === 0) {
+      canvas.style.backgroundColor = getNextColor();
+    }
+  }
+
+  // collisionDetection() 関数内でブロックが当たった場合に呼び出し
+  // ブロックが全て消されたかを判定
+  function changeBackgroundColor() {
+    const colors = ['rgba(255,0,0,0.5)', 'rgba(255,127,0,0.5)', 'rgba(255,255,0,0.5)', 'rgba(0,255,0,0.5)', 'rgba(0,0,255,0.5)', 'rgba(75,0,130,0.5)', 'rgba(148,0,211,0.5)']; // 半透明のレインボーカラーの配列
+    let currentIndex = 0; // colors 配列の現在の色のインデックス
+
+    function getNextColor() {
+      const color = colors[currentIndex];
+      currentIndex = (currentIndex + 1) % colors.length; // 次の色のインデックスを更新
+      return color;
+    }
+
+    return getNextColor;
+  }
+
+  const getNextColor = changeBackgroundColor(); // getNextColor 関数が呼ばれるたびに次の色を返す関数を取得
+
+  // ブロックが全て消されたかを判定する関数
+  function checkWin() {
+    let count = 0;
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          count++;
+        }
+      }
+    }
+    // ブロックが全て消された場合、勝利アニメーションを開始
+    if (count === 0) {
+      if (!isWinAnimationRunning) {
+        isWinAnimationRunning = true;
+        startWinAnimation();
+      }
+    }
+  }
+  // 勝利アニメーションを開始する関数
+  function startWinAnimation() {
+    const animationDuration = 180; // アニメーションの時間（ミリ秒）
+    const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF'];
+    let animationInterval;
+
+    const changeColor = () => {
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      canvas.style.borderColor = randomColor;
+    };
+
+    const blink = () => {
+      changeColor();
+      setTimeout(changeColor, animationDuration / 2);
+    };
+
+    // アニメーションを開始
+    animationInterval = setInterval(blink, animationDuration);
+
+    // 一定時間後にアニメーションを停止
+    setTimeout(() => {
+      clearInterval(animationInterval);
+      isWinAnimationRunning = false;
+    }, animationDuration * 1); // 10回点滅させる
+  }
+  // ボールを描画する関数
+  function drawBall() {
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fillStyle = ball.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+  // パドルを描画する関数
+  function drawPaddle() {
+    ctx.beginPath();
+    ctx.rect(paddle.x, canvas.height - paddle.height, paddle.width, paddle.height);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  // キー入力時のパドルの移動を制御する関数
+  function KeyMovePaddle() {
+    if (rightPressed && paddle.x + KIYPADDLE_SPEED < canvas.width - paddle.width) {
+      paddle.x += KIYPADDLE_SPEED;
+    } else if (leftPressed && paddle.x - KIYPADDLE_SPEED > 0) {
+      paddle.x -= KIYPADDLE_SPEED;
+    }
+
+    // パドルがキャンバスの外に出た場合、キャンバスの端に移動する
+    if (paddle.x < 0) {
+      paddle.x = 0;
+    } else if (paddle.x > canvas.width - paddle.width) {
+      paddle.x = canvas.width - paddle.width;
+    }
+  }
+  // クリック入力時のパドルの移動を制御する関数
+  function ClickMovePaddle() {
+    if (rightPressed && paddle.x + CLICKPADDLE_SPEED < canvas.width - paddle.width) {
+      paddle.x += CLICKPADDLE_SPEED;
+    } else if (leftPressed && paddle.x - CLICKPADDLE_SPEED > 0) {
+      paddle.x -= CLICKPADDLE_SPEED;
+    }
+
+    // パドルがキャンバスの外に出た場合、キャンバスの端に移動する
+    if (paddle.x < 0) {
+      paddle.x = 0;
+    } else if (paddle.x > canvas.width - paddle.width) {
+      paddle.x = canvas.width - paddle.width;
+    }
+  }
+
+  // ボールとブロック、壁、パドルとの衝突を検出する関数
+  function collisionDetection() {
+    // ブロックとボールの衝突判定
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        const brick = bricks[c][r];
+        if (brick.status === 1) {
+          if (
+            ball.x > brick.x &&
+            ball.x < brick.x + BRICK_WIDTH &&
+            ball.y > brick.y &&
+            ball.y < brick.y + BRICK_HEIGHT
+          ) {
+            ball.dy = -ball.dy;
+            brick.status = 0;
+            ball.color = getRandomColor();
+          }
+        }
+      }
+    }
+
+    // 壁とボールの衝突判定
+    if (
+      ball.x + ball.dx > canvas.width - ball.radius ||
+      ball.x + ball.dx < ball.radius
+    ) {
+      ball.dx = -ball.dx;
+      ball.color = getRandomColor();
+    }
+
+    // 天井とボールの衝突判定
+    if (ball.y + ball.dy < ball.radius) {
+      ball.dy = -ball.dy;
+      ball.color = getRandomColor();
+    } else if (ball.y + ball.dy > canvas.height - ball.radius) {
+      // パドルとボールの衝突判定
+      if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+        ball.dy = -ball.dy;
+        ball.color = getRandomColor();
+      } else {
+        // ゲームオーバー処理
+        gameover = true;
+      }
+    }
+  }
+
+  // キーボードの入力イベントを処理する関数
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Right' || e.key === 'ArrowRight') {
+      rightPressed = true;
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+      leftPressed = true;
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Right' || e.key === 'ArrowRight') {
+      rightPressed = false;
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+      leftPressed = false;
+    }
+  });
+
+  // 左矢印がクリックされたときの処理
+  function handleLeftArrowClick() {
+    // 矢印がクリックされたときに白色に変更
+    leftArrow.style.color = 'white'; // テキストカラーを白に変更
+
+    // パドルがキャンバスの左端よりも左にある場合に移動する
+    if (paddle.x > 0) {
+      paddle.x -= CLICKPADDLE_SPEED;
+    }
+
+    ClickMovePaddle();
+
+    // 一定時間後に矢印の色を黒に戻す
+    setTimeout(() => {
+      leftArrow.style.color = 'black'; // テキストカラーを黒に変更
+    }, 150); // 200ミリ秒後に実行
+  }
+  // 右矢印がクリックされたときの処理
+  function handleRightArrowClick() {
+    // 矢印がクリックされたときに白色に変更
+    rightArrow.style.color = 'white'; // テキストカラーを白に変更
+
+    // パドルがキャンバスの右端よりも右にある場合に移動する
+    if (paddle.x < canvas.width - paddle.width) {
+      paddle.x += CLICKPADDLE_SPEED;
+    }
+
+    ClickMovePaddle();
+
+    // 一定時間後に矢印の色を黒に戻す
+    setTimeout(() => {
+      rightArrow.style.color = 'black'; // テキストカラーを黒に変更
+    }, 150); // 200ミリ秒後に実行
+  }
+
+  // キーボードの入力イベントを処理する関数
+  function handleKeyboardInput(e) {
+    if (e.key === 'ArrowLeft' && paddle.x > 0) {
+      // 左矢印キーが押され、かつパドルがキャンバスの左端よりも左にある場合
+      leftArrow.style.color = 'white'; // 左矢印の色を白に変更
+      rightArrow.style.color = 'black'; // 右矢印の色を黒に変更
+    } else if (e.key === 'ArrowRight' && paddle.x < canvas.width - paddle.width) {
+      // 右矢印キーが押され、かつパドルがキャンバスの右端よりも右にある場合
+      rightArrow.style.color = 'white'; // 右矢印の色を白に変更
+      leftArrow.style.color = 'black'; // 左矢印の色を黒に変更
+    } else {
+      // どちらの矢印キーも押されていない場合
+      leftArrow.style.color = 'black'; // 左矢印の色を黒に変更
+      rightArrow.style.color = 'black'; // 右矢印の色を黒に変更
+    }
+  }
+
+  // 矢印のマウスアウトイベントの処理
+  function handleArrowMouseOut() {
+    leftArrow.style.color = 'black';
+    rightArrow.style.color = 'black';
+  }
+
+  // ゲームのメインループを更新する関数
+  function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // ゲームオーバーでない場合、ブロック、ボール、パドルを描画し、衝突を判定
+    if (!gameover) {
+      drawBricks();
+      drawBall();
+      drawPaddle();
+      collisionDetection();
+      KeyMovePaddle();
+
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+
+      // 左矢印のクリックイベントリスナーを追加
+      leftArrow.addEventListener('click', handleLeftArrowClick);
+      // 右矢印のクリックイベントリスナーを追加
+      rightArrow.addEventListener('click', handleRightArrowClick);
+
+      // キーボードの入力イベントリスナーを設定
+      document.addEventListener('keydown', handleKeyboardInput);
+      document.addEventListener('keyup', () => {
+        // キーボードの入力がなくなったら白色に戻す
+        leftArrow.style.color = 'black'; // 左矢印の色を白に変更
+        rightArrow.style.color = 'black'; // 右矢印の色を白に変更
+      });
+
+      // ブロックが全て消されたかを判定
+      checkWin();
+
+      requestAnimationFrame(update);
+    } else {
+      // ゲームオーバー時の処理
+      setTimeout(() => {
+        gameover = false;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height - 30;
+        paddle.x = (canvas.width - PADDLE_WIDTH) / 2;
+        canvas.style.borderColor = 'white';
+        initializeBricks();
+        update();
+      }, 1000);
+    }
+  }
+
+  // ゲームの初期化とメインループの開始
+  initializeBricks();
+  update();
+
+
 </script>
