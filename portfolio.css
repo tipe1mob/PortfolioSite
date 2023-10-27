@@ -402,7 +402,6 @@ canvas {
     border: 6px solid #ffffff;
 }
 
-/* CSS */
 .arrow {
     /* 通常のスタイル */
     width: 50px;
@@ -411,8 +410,7 @@ canvas {
     line-height: 50px;
     font-size: 44px;
     cursor: pointer;
-
-
+    
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -427,5 +425,4 @@ canvas {
 
 .arrow:hover {
     transform: translateY(-3.7px);
-    /* Y軸方向に-10pxだけ浮き上がるアニメーション */
 }
